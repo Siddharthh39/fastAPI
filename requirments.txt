@@ -1,0 +1,4 @@
+fastApi
+sqlmodel
+uvicorn
+sqlalchemy

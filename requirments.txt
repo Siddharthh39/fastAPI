@@ -2,3 +2,4 @@ fastApi
 sqlmodel
 uvicorn
 sqlalchemy
+passlib

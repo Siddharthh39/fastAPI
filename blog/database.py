@@ -10,3 +10,11 @@ engine = create_engine(sqlAlchmeyUrl, connect_args={
 localSession = sessionmaker(bind=engine, autocommit = False,autoflush=False,)
 
 base = declarative_base()
+
+def get_db():
+    db = localSession()
+    try:
+        yield db
+    
+    finally:
+        db.close()

@@ -27,16 +27,18 @@ def makePost(request:schema.blog, db : Session = Depends(get_db), user_id:int = 
     return newPost
 
 @app.get('/blog', response_model=List[schema.ShowBlog], tags=["Blogs"])
-def showAllBlogs(db : Session = Depends(get_db), user_id:int = 1):
-    blogs = db.query(models.Blog).filter(models.Blog.user_id == user_id).all()
+def showAllBlogs(db : Session = Depends(get_db)):
+    blogs = db.query(models.Blog).all()
     return blogs
 
 @app.get('/blog/{id}', status_code=status.HTTP_200_OK, response_model=schema.ShowBlog, tags=["Blogs"])
-def getBlogId(id:int, response:Response,db : Session = Depends(get_db), user_id:int = 1):
-    returnId = db.query(models.Blog).filter(models.Blog.id == id, models.Blog.user_id == user_id).first()
+def getBlogId(id:int, response:Response,db : Session = Depends(get_db), ):
+    returnId = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not returnId:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail=f'no blog for id {id} found')
+        # response.status_code = status.HTTP_404_NOT_FOUND
+        # return{'detail':f'no blog for id {id}'}
     return returnId
 
 @app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=["Blogs"])
@@ -64,7 +66,7 @@ def updateBlog(id:int, request:schema.blog, db : Session = Depends(get_db)):
 
 
 
-@app.post('/user', status_code=status.HTTP_201_CREATED, response_model=schema.User, tags=["Users"])
+@app.post('/user', status_code=status.HTTP_201_CREATED, response_model=schema.UserResponse, tags=["Users"])
 def createUser(request:schema.User, db : Session = Depends(get_db)):
     newUser = models.User(name = request.name, mail = request.mail,
                           password = Hashing().hashPassword(request.password))
@@ -73,7 +75,7 @@ def createUser(request:schema.User, db : Session = Depends(get_db)):
     db.refresh(newUser)
     return newUser
 
-@app.get('/user/{id}', response_model=schema.User, tags=["Users"])
+@app.get('/user/{id}', response_model=schema.UserResponse, tags=["Users"])
 def getUser(id:int, db : Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()
     if not user:

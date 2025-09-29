@@ -1,33 +1,4 @@
 from pydantic import BaseModel
-from typing import List
-
-class blogBase(BaseModel):
-    title : str
-    body : str
-    
-class blog(blogBase):
-    class Config:
-        orm_mode = True
-
-
-class User(BaseModel):
-    name : str
-    mail : str
-    password : str
-
-    
-    class Config:
-        orm_mode = True
-
-class ShowUser(BaseModel):
-    name : str
-    mail : str
-    posts : List[blog] = []
-    
-    class Config:
-        orm_mode = True
-
-from pydantic import BaseModel
 from typing import List, Optional
 
 class blog(BaseModel):
@@ -67,3 +38,10 @@ class ShowBlog(BaseModel):
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    mail: str | None = None

@@ -3,3 +3,5 @@ sqlmodel
 uvicorn
 sqlalchemy
 passlib
+bcrypt
+python-jose
